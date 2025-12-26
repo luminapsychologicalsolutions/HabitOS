@@ -9,10 +9,10 @@
 
 <h2>Habit Tracker</h2>
 
-<label>Select Month:</label>
-<input type="month" id="monthPicker">
+<label>Month:</label>
+<input type="month" id="month">
 
-<table id="tracker">
+<table>
 <thead>
 <tr>
   <th>Date</th>
@@ -21,13 +21,12 @@
   <th>Progress</th>
 </tr>
 </thead>
-<tbody></tbody>
+<tbody id="body"></tbody>
 </table>
 
 <p>
-Completed: <span id="done">0</span> /
-150 |
-Remaining: <span id="left">150</span>
+Done: <span id="done">0</span> |
+Remaining: <span id="left">0</span>
 </p>
 
 <script src="script.js"></script>

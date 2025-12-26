@@ -1,22 +1,22 @@
-const API_URL = "https://script.google.com/macros/s/AKfycbxrvPTUxVjZ985PNsggrNS64E4dtQx7WdhVny0TKi3M9CQyiImAcp_PcgGuGDA_a5kntQ/exec";
-const USER = "Lumina"; // later replace with login
+const API = "https://script.google.com/macros/s/AKfycbxrvPTUxVjZ985PNsggrNS64E4dtQx7WdhVny0TKi3M9CQyiImAcp_PcgGuGDA_a5kntQ/exec";
+const USER = "Lumina"; // simple for now
 const HABITS = 5;
 
-const tbody = document.querySelector("tbody");
+const body = document.getElementById("body");
 const doneEl = document.getElementById("done");
 const leftEl = document.getElementById("left");
-const monthPicker = document.getElementById("monthPicker");
+const month = document.getElementById("month");
 
-monthPicker.value = new Date().toISOString().slice(0,7);
-monthPicker.onchange = load;
+month.value = new Date().toISOString().slice(0,7);
+month.onchange = load;
 
 function load() {
-  fetch(API_URL, {
+  fetch(API, {
     method: "POST",
     body: JSON.stringify({
       action: "load",
       user: USER,
-      month: monthPicker.value
+      month: month.value
     })
   })
   .then(r => r.json())
@@ -24,22 +24,19 @@ function load() {
 }
 
 function render(data = {}) {
-  tbody.innerHTML = "";
+  body.innerHTML = "";
   let total = 0;
 
-  const daysInMonth = new Date(
-    monthPicker.value.split("-")[0],
-    monthPicker.value.split("-")[1],
-    0
-  ).getDate();
+  const [y,m] = month.value.split("-");
+  const days = new Date(y, m, 0).getDate();
 
-  for (let d = 1; d <= daysInMonth; d++) {
-    const date = `${monthPicker.value}-${String(d).padStart(2,"0")}`;
+  for (let d=1; d<=days; d++) {
+    const date = `${month.value}-${String(d).padStart(2,"0")}`;
     const row = data[date] || Array(HABITS).fill(false);
     const done = row.filter(Boolean).length;
     total += done;
 
-    tbody.innerHTML += `
+    body.innerHTML += `
       <tr>
         <td>${date}</td>
         ${row.map((v,i)=>`
@@ -58,7 +55,7 @@ function render(data = {}) {
   }
 
   doneEl.textContent = total;
-  leftEl.textContent = daysInMonth*HABITS - total;
+  leftEl.textContent = days*HABITS - total;
 }
 
 function save(date) {
@@ -69,7 +66,7 @@ function save(date) {
     );
   }
 
-  fetch(API_URL, {
+  fetch(API, {
     method: "POST",
     body: JSON.stringify({
       action: "save",

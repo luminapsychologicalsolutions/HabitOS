@@ -1,6 +1,6 @@
 body {
   font-family: system-ui;
-  padding: 10px;
+  padding: 12px;
 }
 
 table {
@@ -21,11 +21,11 @@ input[type=checkbox] {
 }
 
 .progress {
-  height: 8px;
   background: #eee;
+  height: 8px;
 }
 
 .progress div {
-  height: 100%;
   background: #4caf50;
+  height: 100%;
 }

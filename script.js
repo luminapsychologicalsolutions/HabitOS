@@ -1,14 +1,14 @@
 const API = "https://script.google.com/macros/s/AKfycbxrvPTUxVjZ985PNsggrNS64E4dtQx7WdhVny0TKi3M9CQyiImAcp_PcgGuGDA_a5kntQ/exec";
-const USER = "Lumina"; // simple for now
+const USER = "Lumina";
 const HABITS = 5;
 
-const body = document.getElementById("body");
+const body = document.getElementById("tableBody");
 const doneEl = document.getElementById("done");
 const leftEl = document.getElementById("left");
-const month = document.getElementById("month");
+const monthPicker = document.getElementById("monthPicker");
 
-month.value = new Date().toISOString().slice(0,7);
-month.onchange = load;
+monthPicker.value = new Date().toISOString().slice(0,7);
+monthPicker.onchange = load;
 
 function load() {
   fetch(API, {
@@ -16,7 +16,7 @@ function load() {
     body: JSON.stringify({
       action: "load",
       user: USER,
-      month: month.value
+      month: monthPicker.value
     })
   })
   .then(r => r.json())
@@ -25,24 +25,26 @@ function load() {
 
 function render(data = {}) {
   body.innerHTML = "";
-  let total = 0;
+  let totalDone = 0;
 
-  const [y,m] = month.value.split("-");
+  const [y, m] = monthPicker.value.split("-");
   const days = new Date(y, m, 0).getDate();
 
-  for (let d=1; d<=days; d++) {
-    const date = `${month.value}-${String(d).padStart(2,"0")}`;
+  for (let d = 1; d <= days; d++) {
+    const date = `${monthPicker.value}-${String(d).padStart(2,"0")}`;
     const row = data[date] || Array(HABITS).fill(false);
     const done = row.filter(Boolean).length;
-    total += done;
+    totalDone += done;
 
     body.innerHTML += `
       <tr>
-        <td>${date}</td>
+        <td>${d}</td>
         ${row.map((v,i)=>`
-          <td><input type="checkbox" ${v?"checked":""}
-          onchange="save('${date}')"
-          id="${date}-${i}"></td>
+          <td>
+            <input type="checkbox" ${v?"checked":""}
+            onchange="save('${date}')"
+            id="${date}-${i}">
+          </td>
         `).join("")}
         <td>${done}</td>
         <td>
@@ -54,16 +56,14 @@ function render(data = {}) {
     `;
   }
 
-  doneEl.textContent = total;
-  leftEl.textContent = days*HABITS - total;
+  doneEl.textContent = totalDone;
+  leftEl.textContent = days * HABITS - totalDone;
 }
 
 function save(date) {
   const habits = [];
   for (let i=0;i<HABITS;i++) {
-    habits.push(
-      document.getElementById(`${date}-${i}`).checked
-    );
+    habits.push(document.getElementById(`${date}-${i}`).checked);
   }
 
   fetch(API, {

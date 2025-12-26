@@ -1,0 +1,31 @@
+body {
+  font-family: system-ui;
+  padding: 10px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+th, td {
+  border: 1px solid #ccc;
+  padding: 6px;
+  text-align: center;
+}
+
+input[type=checkbox] {
+  width: 18px;
+  height: 18px;
+}
+
+.progress {
+  height: 8px;
+  background: #eee;
+}
+
+.progress div {
+  height: 100%;
+  background: #4caf50;
+}
